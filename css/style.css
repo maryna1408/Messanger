@@ -12,6 +12,53 @@
         overflow: hidden;
         height: 50px;
 }
+.btnReply{
+  width: 100%;
+  text-align: center;
+}
 .not-read-bg{
     background-color: #EDEDED;
 }
+.message{
+  transition: .3s;
+  border: 2px solid transparent;
+}
+.message:hover{
+  border: 2px solid #000;
+}
+body.modal-open1 {
+    overflow: hidden;
+  }
+  body.modal-open1 .modal-backdrop1 {
+    opacity: 1;
+    visibility: visible;
+  }
+  .modal-backdrop1 {
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+  }
+  .modal1 {
+    width: 90%;
+    max-width: 600px;
+    background-color: #fff;
+    border: 1px solid #000;
+    padding: 25px;
+    position: relative;
+    border-radius: 10px;
+  }
+
+  .modal-close1 {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
