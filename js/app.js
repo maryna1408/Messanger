@@ -67,7 +67,7 @@ function renderMessages(data_array, node) {
 }
 
 function createMessageHTML(message_data) {
-    return `<div class="message row g-0 pb-4 px-3 d-flex align-items-center h-auto ${!message_data.seen ? 'not-read-bg fw-bold' : ''}" data-id="${message_data.id}" 
+    return `<div class="message row g-0 pb-4 px-3 d-flex align-items-center h-auto ${!message_data.seen ? 'not-read-bg fw-bold' : ''}" data-id="${message_data.id}" data-bs-target="#exampleModal" data-bs-toggle="modal"
     >
     <div class="col-4 sender d-flex justify-content-start align-items-center">
     <img class="avatar me-4" width="auto" height="90px" loading="lazy" src="${message_data.avatar}" alt="${message_data.name}">
