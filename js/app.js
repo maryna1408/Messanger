@@ -4,6 +4,7 @@ const messagesNumEl = document.getElementById('messagesNum')
 const notReadEl = document.getElementById('notRead')
 const formSearchEl = document.getElementById('formSearch')
 const messageListEl = document.getElementById('messageList')
+const exampleModalEl = document.getElementById('exampleModal')
 
 
 const dateFormatter = new Intl.DateTimeFormat()
@@ -39,8 +40,9 @@ messageListEl.addEventListener('click', event => {
         const messageId = messageEl.dataset.id
         console.log(messageEl.dataset.id)
         MESSAGES.forEach((message) => {
-            if (message.is == messageId) {
+            if (message.id == messageId) {
                 message.seen = true
+                openModal(message)
             }
         })
         renderMessages(MESSAGES, messageListEl)
@@ -67,10 +69,10 @@ function renderMessages(data_array, node) {
 }
 
 function createMessageHTML(message_data) {
-    return `<div class="message row g-0 pb-4 px-3 d-flex align-items-center h-auto ${!message_data.seen ? 'not-read-bg fw-bold' : ''}" data-id="${message_data.id}" data-bs-target="#exampleModal" data-bs-toggle="modal"
+    return `<div class="message row g-0 pb-4 px-3 d-flex align-items-center justify-content-between h-auto ${!message_data.seen ? 'not-read-bg fw-bold' : ''}" data-id="${message_data.id}" data-bs-target="#exampleModal" data-bs-toggle="modal"
     >
     <div class="col-4 sender d-flex justify-content-start align-items-center">
-    <img class="avatar me-4" width="auto" height="90px" loading="lazy" src="${message_data.avatar}" alt="${message_data.name}">
+    <img class="avatar rounded-circle me-4" width="auto" height="90px" loading="lazy" src="${message_data.avatar}" alt="${message_data.name}">
     <div class="pers-info text-center">
         <div class="name mb-1">${message_data.name}</div>
         <div class="phone">${message_data.phone}</div>
@@ -83,19 +85,22 @@ function createMessageHTML(message_data) {
     </div>`
 }
 
-// function createModalWindow(message) {
-//     return `<div class="modal-header sender d-flex justify-content-start align-items-center">
-//     <img class="avatar" width="1" height="1" loading="lazy" src="${message.avatar}" alt="${message.name}" />
-//     <div class="pers-info me-auto">
-//       <div class="name mb-1">${message.name}</div>
-//       <div class="phone">${message.phone}</div>
-//     </div>
-//     <div class="date">${message.date}</div>
-//     <div class="modal-body">
-//         <p>${message.message}</p>
-//     </div>
-//   </div>`
-// }
 
+function openModal(message) {
+    exampleModalEl.querySelector('.modal-body').innerHTML = createModalWindow(message)
+  }
 
-// data-bs-target="#exampleModal" data-bs-toggle="modal"/
+function createModalWindow(message) {
+    return `<div class="modal-header sender d-flex justify-content-start align-items-center">
+    <img class="avatar me-3 rounded-circle" width="auto" height="90" loading="lazy" src="${message.avatar}" alt="${message.name}" />
+    <div class="pers-info me-auto text-center">
+      <div class="name mb-1">${message.name}</div>
+      <div class="phone">${message.phone}</div>
+    </div>
+    <div class="date">${dateFormatter.format(message.date)}   ${timeFormatter.format(message.date)}</div>
+  </div>
+  <div class="modal-body">
+        <p>${message.message}</p>
+    </div>`
+}
+
