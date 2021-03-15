@@ -92,7 +92,7 @@ function openModal(message) {
 
 function createModalWindow(message) {
     return `<div class="modal-header sender d-flex justify-content-start align-items-center">
-    <img class="avatar me-3 rounded-circle" width="auto" height="90" loading="lazy" src="${message.avatar}" alt="${message.name}" />
+    <img class="avatar me-1 rounded-circle" width="auto" height="90" loading="lazy" src="${message.avatar}" alt="${message.name}" />
     <div class="pers-info me-auto text-center">
       <div class="name mb-1">${message.name}</div>
       <div class="phone">${message.phone}</div>
