@@ -7,7 +7,7 @@ const formSearchEl = document.getElementById('formSearch')
 const modalWindow = document.getElementById("modalWindow")
 const openModalBtn = document.getElementById("openModalBtn")
 const btnReplyEL = document.getElementById("btnReply")
-const formControlEl = document.getElementById("floatingTextarea2")
+const replyFormEl = document.getElementById("replyForm")
 
 const dateFormatter = new Intl.DateTimeFormat()
 const timeFormatter = new Intl.DateTimeFormat(undefined, {
@@ -25,10 +25,11 @@ const timeFormatter = new Intl.DateTimeFormat(undefined, {
 //     "seen": false
 //   }
 
-btnReplyEL.addEventListener('click', () => {
-  console.log(formControlEl.value)
+replyFormEl.addEventListener('submit', function (event) {
+  event.preventDefault()
+  console.log(this.replyText.value);
   document.body.classList.remove('modal-open1')
-  formControlEl.value = null
+  this.reset()
 })
 
 cardListEl.addEventListener('click', event => {
@@ -38,8 +39,7 @@ cardListEl.addEventListener('click', event => {
         MESSAGES.forEach((message) => {
             if (message.id == messageId) {
                 message.seen = true
-                document.body.classList.add('modal-open1')
-                createModalWindow(MESSAGES)
+                openModal(message)
             }
         })
         RenderCards(MESSAGES, cardListEl)
@@ -115,40 +115,23 @@ function CreateCardHTML(card_data) {
     </div>`
 } 
 
-// function renderModalWindow(data_array, node) {
-//   let html = ''
+function openModal(message) {
+  modalWindow.querySelector('.modal-content1').innerHTML = createModalWindow(message)
+  document.body.classList.add('modal-open1')
+}
 
-//   data_array.forEach(el => html + createModalWindow(el));
-
-//     node.innerHTML = html
-// }
-
-function createModalWindow(card_data) {
-    return `<div class="modal1">
-    <div class="modal-header1">
-      <div class="sender d-flex justify-content-start align-items-center">
-        <img class="avatar" width="1" height="1" loading="lazy" src="https://robohash.org/repellendusimpeditnisi.png?size=50x50&set=set1" alt="">
-        <div class="pers-info">
-            <div class="name mb-1">${card_data.name}</div>
-            <div class="phone">${card_data.phone}</div>
-        </div>
-        <div class="col-4 date d-flex justify-content-end">
-          <div class="date">${card_data.date}</div>
-      </div>
-      <button class="modal-close1 btn btn-secondary"><i class="fas fa-times"></i></button>
+function createModalWindow(message) {
+    return `<div class="modal-header1 sender d-flex justify-content-start align-items-center">
+    <img class="avatar" width="1" height="1" loading="lazy" src="${message.avatar}" alt="${message.name}" />
+    <div class="pers-info me-auto">
+      <div class="name mb-1">${message.name}</div>
+      <div class="phone">${message.phone}</div>
     </div>
-    <div class="modal-body1 my-4">
-    ${card_data.message}
-    </div>
-    <div class="row modal-footer">
-      <div class="col-12 g-0 mx-0 form-floating mb-2">
-        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 70px"></textarea>
-        <label for="floatingTextarea2">Your reply ...</label>
-      </div>
-      <div class="d-flex justify-content-center g-0 mx-0">
-        <button class="btReply btn btn-primary text-white mx-0 ">Send</button>
-      </div>
-    </div>
+    <div class="date">${dateFormatter.format(message.date)} ${timeFormatter.format(message.date)}</div>
+    <button class="modal-close1 btn btn-secondary"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="modal-body1 my-4">
+    <p>${message.message}</p>
   </div>`
 }
 
