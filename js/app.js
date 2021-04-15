@@ -1,10 +1,23 @@
-let MESSAGES = JSON.parse(DATA)
+
+async function getMessages(url) {
+  const response = await fetch(url)
+  console.log(response)
+  let MESSAGES = await response.json()
+  console.log(MESSAGES)
+}
+
+
+
+// let MESSAGES = JSON.parse(DATA)
 const renderBtnEl = document.getElementById('renderBtn')
 const messagesNumEl = document.getElementById('messagesNum')
 const notReadEl = document.getElementById('notRead')
 const formSearchEl = document.getElementById('formSearch')
 const messageListEl = document.getElementById('messageList')
 const exampleModalEl = document.getElementById('exampleModal')
+
+
+
 
 
 const dateFormatter = new Intl.DateTimeFormat()
@@ -15,22 +28,22 @@ const timeFormatter = new Intl.DateTimeFormat(undefined, {
 
 
 renderBtnEl.addEventListener('click', () => {
-    MESSAGES = JSON.parse(DATA)
-    renderMessages(MESSAGES, messageListEl)
+    // getMessages('/data/senders.json') = JSON.parse(DATA)
+    renderMessages(getMessages('/data/senders.json'), messageListEl)
 })
 
 formSearchEl.addEventListener('submit', function (event) {
     event.preventDefault()
     const query = this.search.value.trim().toLowerCase().split(' ').filter(word => !!word)
     const searchFields = ['name', 'phone', 'message']
-    MESSAGES = JSON.parse(DATA).filter(message => {
+    getMessages('/data/senders.json') = JSON.parse(DATA).filter(message => {
       return query.every(word => {
         return searchFields.some(field => {
           return `${message[field]}`.trim().toLowerCase().includes(word)
         })
       })
     })
-    renderMessages(MESSAGES, messageListEl)
+    renderMessages(getMessages('/data/senders.json'), messageListEl)
   })
 
 messageListEl.addEventListener('click', event => {
@@ -39,19 +52,19 @@ messageListEl.addEventListener('click', event => {
     if(messageEl) {
         const messageId = messageEl.dataset.id
         console.log(messageEl.dataset.id)
-        MESSAGES.forEach((message) => {
+        getMessages('/data/senders.json').forEach((message) => {
             if (message.id == messageId) {
                 message.seen = true
                 openModal(message)
             }
         })
-        renderMessages(MESSAGES, messageListEl)
+        renderMessages(getMessages('/data/senders.json'), messageListEl)
     }
 })
 
 
 
-renderMessages(MESSAGES, messageListEl)
+renderMessages(getMessages('/data/senders.json'), messageListEl)
 
 function renderMessages(data_array, node) {
     let html = ''
