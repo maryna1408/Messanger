@@ -1,12 +1,11 @@
-
+let MESSAGES = []
 async function getMessages(url) {
   const response = await fetch(url)
-  console.log(response)
-  let MESSAGES = await response.json()
-  console.log(MESSAGES)
+  MESSAGES = await response.json()
+  renderMessages(MESSAGES, messageListEl)
 }
 
-
+getMessages('/data/senders.json')
 
 // let MESSAGES = JSON.parse(DATA)
 const renderBtnEl = document.getElementById('renderBtn')
@@ -28,61 +27,60 @@ const timeFormatter = new Intl.DateTimeFormat(undefined, {
 
 
 renderBtnEl.addEventListener('click', () => {
-    // getMessages('/data/senders.json') = JSON.parse(DATA)
-    renderMessages(getMessages('/data/senders.json'), messageListEl)
+  getMessages('/data/senders.json')
 })
 
 formSearchEl.addEventListener('submit', function (event) {
-    event.preventDefault()
-    const query = this.search.value.trim().toLowerCase().split(' ').filter(word => !!word)
-    const searchFields = ['name', 'phone', 'message']
-    getMessages('/data/senders.json') = JSON.parse(DATA).filter(message => {
-      return query.every(word => {
-        return searchFields.some(field => {
-          return `${message[field]}`.trim().toLowerCase().includes(word)
-        })
+  event.preventDefault()
+  const query = this.search.value.trim().toLowerCase().split(' ').filter(word => !!word)
+  const searchFields = ['name', 'phone', 'message']
+  const filteredMessages = MESSAGES.filter(message => {
+    return query.every(word => {
+      return searchFields.some(field => {
+        return `${message[field]}`.trim().toLowerCase().includes(word)
       })
     })
-    renderMessages(getMessages('/data/senders.json'), messageListEl)
   })
+  renderMessages(filteredMessages, messageListEl)
+})
 
 messageListEl.addEventListener('click', event => {
-    const messageEl = event.target.closest('.message')
+  const messageEl = event.target.closest('.message')
 
-    if(messageEl) {
-        const messageId = messageEl.dataset.id
-        console.log(messageEl.dataset.id)
-        getMessages('/data/senders.json').forEach((message) => {
-            if (message.id == messageId) {
-                message.seen = true
-                openModal(message)
-            }
-        })
-        renderMessages(getMessages('/data/senders.json'), messageListEl)
-    }
+  if (messageEl) {
+    const messageId = messageEl.dataset.id
+    console.log(messageEl.dataset.id)
+    MESSAGES.forEach((message) => {
+      if (message.id == messageId) {
+        message.seen = true
+        openModal(message)
+      }
+    })
+    renderMessages(MESSAGES, messageListEl)
+  }
 })
 
 
 
-renderMessages(getMessages('/data/senders.json'), messageListEl)
+
 
 function renderMessages(data_array, node) {
-    let html = ''
+  let html = ''
 
-    messagesNumEl.textContent = data_array.length
-    notReadEl.textContent = data_array.filter(message => !message.seen).length
+  messagesNumEl.textContent = data_array.length
+  notReadEl.textContent = data_array.filter(message => !message.seen).length
 
-    data_array.sort((a,b) => {
-        return a.seen - b.seen || b.date - a.date
-    })
+  data_array.sort((a, b) => {
+    return a.seen - b.seen || b.date - a.date
+  })
 
-    data_array.forEach(el => html += createMessageHTML(el));
+  data_array.forEach(el => html += createMessageHTML(el));
 
-    node.innerHTML = html
+  node.innerHTML = html
 }
 
 function createMessageHTML(message_data) {
-    return `<div class="message row g-0 pb-4 px-3 d-flex align-items-center justify-content-between h-auto ${!message_data.seen ? 'not-read-bg fw-bold' : ''}" data-id="${message_data.id}" data-bs-target="#exampleModal" data-bs-toggle="modal"
+  return `<div class="message row g-0 pb-4 px-3 d-flex align-items-center justify-content-between h-auto ${!message_data.seen ? 'not-read-bg fw-bold' : ''}" data-id="${message_data.id}" data-bs-target="#exampleModal" data-bs-toggle="modal"
     >
     <div class="col-4 sender d-flex justify-content-start align-items-center">
     <img class="avatar rounded-circle me-4" width="auto" height="90px" loading="lazy" src="${message_data.avatar}" alt="${message_data.name}">
@@ -100,11 +98,11 @@ function createMessageHTML(message_data) {
 
 
 function openModal(message) {
-    exampleModalEl.querySelector('.modal-body').innerHTML = createModalWindow(message)
-  }
+  exampleModalEl.querySelector('.modal-body').innerHTML = createModalWindow(message)
+}
 
 function createModalWindow(message) {
-    return `<div class="modal-header sender d-flex justify-content-start align-items-center">
+  return `<div class="modal-header sender d-flex justify-content-start align-items-center">
     <img class="avatar me-1 rounded-circle" width="auto" height="90" loading="lazy" src="${message.avatar}" alt="${message.name}" />
     <div class="pers-info me-auto text-center">
       <div class="name mb-1">${message.name}</div>
